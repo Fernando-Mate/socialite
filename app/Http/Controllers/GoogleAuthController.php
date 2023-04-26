@@ -45,5 +45,35 @@ class GoogleAuthController extends Controller
 
     }
 
+    public function facebookRedirect(){
+        return Socialite::driver('facebook')->redirect();
+    }
+    public function facebookCallback(){
+        $user = Socialite::driver('facebook')->stateless()->user();
+        $this->createOrUpdateUser($user, 'facebook');
+        return redirect()->intended('https://www.google.com/');
+    }
 
+    public function createOrUpdateUser($data, $provider){
+        $user = User::where('email', $data->email)->first();
+
+        if($user){
+            $user->update([
+                'provider' => $provider,
+                'provider_id' => $data->id,
+                'avatar' => $data->avatar
+            ]);
+        }else{
+            $user = User::create([
+                'name' => $data->name,
+                'email' => $data->email,
+                'provider' => $provider,
+                'provider_id' => $data->id,
+                'avatar' => $data->avatar
+
+            ]);
+        }
+
+        Auth::login($user);
+    }
 }

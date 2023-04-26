@@ -25,3 +25,6 @@ Route::get('/', [HomeController::class, 'index']);
 
 Route::get('auth/google', [GoogleAuthController::class, 'redirect'])->name('google-auth');
 Route::get('auth/google/call-back', [GoogleAuthController::class, 'callbackGoogle']);
+
+Route::get('auth/facebook/redirect', [GoogleAuthController::class, 'facebookRedirect'])->name('facebookRedirect');
+Route::get('auth/facebook/callback', [GoogleAuthController::class, 'facebookCallback'])->name('facebookCallback');
